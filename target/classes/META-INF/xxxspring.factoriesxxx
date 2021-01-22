@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ylzinfo.brt.config.YlzConfig,\
-com.ylzinfo.brt.feign.MyFeignInterceptor
