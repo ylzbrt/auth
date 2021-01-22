@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class ApiServiceImpl implements ApiService {
         log.info("start scan api");
         List<String> allPackages = new ArrayList<>();
         allPackages.add(defaultPackage);
-        final List<String> others = ylzConfig.getControllerPackages();
+        final List<String> others = ylzConfig.getScanPackages();
         if(CollectionUtil.isNotEmpty(others)){
             allPackages.addAll(others);
         }
