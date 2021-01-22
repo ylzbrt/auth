@@ -17,6 +17,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,11 +28,18 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     YlzConfig ylzConfig;
+    List<String> defaultPublicUrls = Arrays.asList(
+            "/doc.html",
+            "/*/v2/api-docs",
+            "/static/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/swagger-resources");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        log.info("拦截器={},ylzconfig={}", getClass(),ylzConfig);
+        log.info("拦截器={},ylzconfig={}", getClass(), ylzConfig);
         final Boolean isPass = (Boolean) request.getAttribute(IntercepterEnum.IS_PASS.getCode());
         if (ylzConfig.isSkipUserCheck() || (isPass != null && isPass)) {
             return super.preHandle(request, response, handler);
@@ -38,7 +47,7 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
 
         final String url = request.getRequestURI();
         //不在公共接口中
-        if (!isPublicUrl(url, ylzConfig.getPublicUrls())) {
+        if (!isPublicUrl(url)) {
             log.error("当前url非公共url，url={}");
             return ResponseUtil.writeDenied(response, AuthReturnEntity.AUTH_ERR, "权限验证失败");
         }
@@ -48,15 +57,20 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
     /**
      *是否公共url
      */
-    private boolean isPublicUrl(String url, List<String> publicUrls) {
-        if (CollectionUtil.isNotEmpty(publicUrls)) {
-            AntPathMatcher antPathMatcher = new AntPathMatcher();
-            for (String publicUrl : publicUrls) {
-                if (antPathMatcher.match(publicUrl, url)) {
-                    return true;
-                }
+    private boolean isPublicUrl(String url) {
+        List<String> allPublicUrls = new ArrayList<>();
+        allPublicUrls.addAll(defaultPublicUrls);
+        if (ylzConfig.getPublicUrls() != null) {
+            allPublicUrls.addAll(ylzConfig.getPublicUrls());
+        }
+
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        for (String publicUrl : allPublicUrls) {
+            if (antPathMatcher.match(publicUrl, url)) {
+                return true;
             }
         }
+
         return false;
     }
 

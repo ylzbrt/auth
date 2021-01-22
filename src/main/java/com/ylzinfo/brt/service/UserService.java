@@ -20,6 +20,15 @@ public interface UserService {
      */
     String getClientIP();
 
+    /**
+    操作人id/经办人id
+     */
+    String getOperatorId();
+    /**
+     * 经办机构编码
+     * */
+    String getOrganizationId();
+
     void saveUserData(CheckUserVO userDataBo);
 
     CheckUserVO getUserData();

@@ -18,7 +18,7 @@ public class CheckUserVO {
     //用户信息
     private UserBean user;
     //组织信息
-    private List<OrganizationBean> organization;
+    private List<OrganizationBean> organizations;
     //角色信息
     private List<RolesBean> roles;
     //权限信息（无需包含菜单、按钮、接口、字段信息）

@@ -15,7 +15,7 @@ public interface AuthPrivilegeFeignClient {
 
 
 
-    @PostMapping("/user/registerApi")
+    @PostMapping("/resource/registerApi")
     AuthReturnEntity<RegisterApiVO> registerApi(@RequestBody RegisterApiDTO dto);
 
 }

@@ -1,5 +1,6 @@
 package com.ylzinfo.brt.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.service.UserService;
 import com.ylzinfo.brt.vo.CheckUserVO;
@@ -8,39 +9,57 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Override
     public String getOperator() {
+
+        return getUser().getName();
+    }
+
+    private CheckUserVO.UserBean getUser() {
         final CheckUserVO userData = getUserData();
-        if(userData==null){
-            return "";
+        if (userData == null) {
+            return new CheckUserVO.UserBean();
         }
         final CheckUserVO.UserBean user = userData.getUser();
-        if(user==null){
-            return "";
+        if (user == null) {
+            return new CheckUserVO.UserBean();
         }
-        return user.getName();
+        return user;
     }
 
     @Override
     public String getOperatorAccount() {
-        final CheckUserVO userData = getUserData();
-        if(userData==null){
-            return "";
-        }
-        final CheckUserVO.UserBean user = userData.getUser();
-        if(user==null){
-            return "";
-        }
-        return user.getAccount();
+        return getUser().getAccount();
 
     }
 
     @Override
     public String getClientIP() {
         return getRequest().getHeader(HttpHeaderEnum.CLIENT_IP.getCode());
+    }
+
+    @Override
+    public String getOperatorId() {
+        return getUser().getUserId() + "";
+
+    }
+
+    @Override
+    public String getOrganizationId() {
+        final CheckUserVO userData = getUserData();
+        if (userData == null) {
+            return "";
+        }
+        final List<CheckUserVO.OrganizationBean> organizations = userData.getOrganizations();
+        if (CollectionUtil.isNotEmpty(organizations)) {
+            return organizations.get(0).getOrganizationId() + "";
+        }
+        return "";
+
     }
 
 

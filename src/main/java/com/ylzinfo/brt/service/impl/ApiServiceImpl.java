@@ -1,5 +1,6 @@
 package com.ylzinfo.brt.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -14,9 +15,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,12 +37,18 @@ public class ApiServiceImpl implements ApiService {
     @Autowired
     AuthPrivilegeFeignClient privilegeFeignClient;
 
+    @Value("${spring.application.name}")
+    String serviceName;
+
     @Override
     public void scan() {
         log.info("start scan api");
         List<String> allPackages = new ArrayList<>();
         allPackages.add(defaultPackage);
-        allPackages.addAll(ylzConfig.getControllerPackages());
+        final List<String> others = ylzConfig.getControllerPackages();
+        if(CollectionUtil.isNotEmpty(others)){
+            allPackages.addAll(others);
+        }
 
         List<RegisterApiDTO.ApiItem> apis = new ArrayList<>();
         for (String pkg : allPackages) {
@@ -60,7 +69,7 @@ public class ApiServiceImpl implements ApiService {
                     log.info("http_method={},url={},name={}", api.getMethod(), fullUrl, name);
 
                     String apiCategory = getApiCategory(fullUrl);
-                    final RegisterApiDTO.ApiItem apiItem = new RegisterApiDTO.ApiItem(apiCategory, api.getMethod(), fullUrl, name);
+                    final RegisterApiDTO.ApiItem apiItem = new RegisterApiDTO.ApiItem(serviceName,apiCategory, api.getMethod(), fullUrl, name);
                     apis.add(apiItem);
                 }
 
@@ -72,7 +81,10 @@ public class ApiServiceImpl implements ApiService {
     }
 
     private String getApiCategory(String parentPath) {
-        return parentPath.replaceAll("/", "");
+        if(!parentPath.contains("/")){
+            return parentPath;
+        }
+        return parentPath.split("/")[1];
     }
 
     private boolean isInnerMethod(Method method) {

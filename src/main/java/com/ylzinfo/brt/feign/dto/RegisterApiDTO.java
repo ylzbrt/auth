@@ -18,6 +18,7 @@ public class RegisterApiDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ApiItem{
+        private String serviceName;
         private String apiCategory;
         private String httpMethod;
         private String url;
