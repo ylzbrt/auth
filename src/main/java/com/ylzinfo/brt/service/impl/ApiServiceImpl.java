@@ -9,22 +9,21 @@ import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.feign.AuthPrivilegeFeignClient;
 import com.ylzinfo.brt.feign.dto.RegisterApiDTO;
 import com.ylzinfo.brt.service.ApiService;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -68,7 +67,10 @@ public class ApiServiceImpl implements ApiService {
                     log.info("http_method={},url={},name={}", api.getMethod(), fullUrl, name);
 
                     String apiCategory = getApiCategory(fullUrl);
-                    final RegisterApiDTO.ApiItem apiItem = new RegisterApiDTO.ApiItem(serviceName,apiCategory, api.getMethod(), fullUrl, name);
+
+                    //VO的字段
+                    final Set<RegisterApiDTO.ApiField> voFields = getVOFields(method);
+                    final RegisterApiDTO.ApiItem apiItem = new RegisterApiDTO.ApiItem(serviceName,apiCategory, api.getMethod(), fullUrl, name,voFields);
                     apis.add(apiItem);
                 }
 
@@ -77,6 +79,72 @@ public class ApiServiceImpl implements ApiService {
         final RegisterApiDTO dto = new RegisterApiDTO();
         dto.setApis(apis);
         privilegeFeignClient.registerApi(dto);
+    }
+
+
+
+    public Set<RegisterApiDTO.ApiField> getVOFields(Method method) {
+        Set<RegisterApiDTO.ApiField> apiFields=new HashSet<>();
+        for (Class returnClass : getReturnClass(method)) {
+            scanFieldItem(apiFields,returnClass);
+        }
+        return apiFields;
+    }
+    private List<Class> getReturnClass(Method method){
+        List<Class> classList=new ArrayList<>();
+        final AnnotatedType annotatedReturnType = method.getAnnotatedReturnType();
+        final Type returnType = annotatedReturnType.getType();
+        if (returnType instanceof ParameterizedType) {
+            Type[] types = ((ParameterizedType) returnType)
+                    .getActualTypeArguments();// 泛型类型列表
+            for (Type type : types) {
+                try {
+                    classList.add(Class.forName(type.getTypeName()));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else{
+            try {
+                classList.add(Class.forName(returnType.getTypeName()));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return classList;
+    }
+
+    private void scanFieldItem(Set<RegisterApiDTO.ApiField> apiFields, Class aclass) {
+        for (Field field : FieldUtils.getAllFields(aclass) ) {
+            field.setAccessible(true);
+            if(field.getType().isAssignableFrom(List.class)){
+                Type gt = field.getGenericType();    //得到泛型类型
+                if(gt instanceof ParameterizedType){
+                    ParameterizedType pt = (ParameterizedType)gt;
+                    Class lll = (Class)pt.getActualTypeArguments()[0];
+                    scanFieldItem(apiFields,lll);
+                }else if (gt instanceof TypeVariable ){
+                    log.error("未知类型={}",aclass);
+                }
+
+                continue;
+            }
+            final ApiModelProperty annotation = field.getAnnotation(ApiModelProperty.class);
+            final RegisterApiDTO.ApiField apiField = new RegisterApiDTO.ApiField();
+            apiField.setEnName(field.getName());
+
+            if (annotation != null) {
+                final String value = annotation.value();
+                if(!org.springframework.util.StringUtils.isEmpty(value)){
+                    apiField.setCnName(value);
+                }
+            }else{
+                apiField.setCnName(field.getName());
+            }
+            apiFields.add(apiField);
+        }
+
+
     }
 
     private String getApiCategory(String parentPath) {
