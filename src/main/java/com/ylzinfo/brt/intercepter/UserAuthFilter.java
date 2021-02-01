@@ -8,7 +8,7 @@ import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.constant.IntercepterEnum;
 import com.ylzinfo.brt.entity.AuthReturnEntity;
 import com.ylzinfo.brt.service.UserAuthService;
-import com.ylzinfo.brt.service.UserService;
+import com.ylzinfo.brt.service.UserInfoService;
 import com.ylzinfo.brt.utils.ResponseUtil;
 import com.ylzinfo.brt.vo.CheckUserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 @Component
@@ -29,7 +28,7 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
     UserAuthService userAuthService;
 
     @Autowired
-    UserService userService;
+    UserInfoService userService;
 
     @Autowired
     YlzConfig ylzConfig;

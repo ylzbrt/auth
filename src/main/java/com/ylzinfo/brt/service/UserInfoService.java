@@ -4,7 +4,7 @@ import com.ylzinfo.brt.vo.CheckUserVO;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface UserService {
+public interface UserInfoService {
     /**
      * 操作人名称
      */
@@ -18,7 +18,7 @@ public interface UserService {
     /**
      * 客户端IP
      */
-    String getClientIP();
+    String getClientIp();
 
     /**
     操作人id/经办人id

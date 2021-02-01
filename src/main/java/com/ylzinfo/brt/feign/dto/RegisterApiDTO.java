@@ -1,7 +1,5 @@
 package com.ylzinfo.brt.feign.dto;
 
-import com.ylzinfo.brt.service.impl.ApiServiceImpl;
-import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

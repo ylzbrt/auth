@@ -1,5 +1,6 @@
 package com.ylzinfo.brt.config;
 
+import com.ylzinfo.brt.vo.CheckUserVO;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,8 @@ public class YlzConfig {
      * 跳过用户权限验证
      */
     private boolean skipUserCheck;
+    /*跳过用户权限时，需配置测试用户数据，为json字符中，结构见CheckUserVO*/
+    private CheckUserVO testUserData;
     /**
      * 需要扫描的包
      */

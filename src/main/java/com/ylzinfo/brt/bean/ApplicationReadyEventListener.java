@@ -1,7 +1,6 @@
 package com.ylzinfo.brt.bean;
 
-import com.sun.javafx.event.EventUtil;
-import com.ylzinfo.brt.service.ApiService;
+import com.ylzinfo.brt.service.ApiInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
     @Autowired
-    ApiService apiService;
+    ApiInfoService apiService;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {

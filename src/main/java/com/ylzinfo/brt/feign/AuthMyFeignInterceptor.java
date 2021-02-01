@@ -1,7 +1,7 @@
 package com.ylzinfo.brt.feign;
 
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
-import com.ylzinfo.brt.service.AuthService;
+import com.ylzinfo.brt.service.ServiceAuthService;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class AuthMyFeignInterceptor implements RequestInterceptor {
     private String serviceName;
 
     @Autowired
-    AuthService authService;
+    ServiceAuthService authService;
 
     public void apply(RequestTemplate template) {
         template.header(HttpHeaderEnum.SERVICE_NAME.getCode(), serviceName);

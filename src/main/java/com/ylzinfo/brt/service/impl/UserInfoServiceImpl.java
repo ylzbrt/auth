@@ -2,7 +2,7 @@ package com.ylzinfo.brt.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
-import com.ylzinfo.brt.service.UserService;
+import com.ylzinfo.brt.service.UserInfoService;
 import com.ylzinfo.brt.vo.CheckUserVO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public String getOperator() {
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getClientIP() {
+    public String getClientIp() {
         return getRequest().getHeader(HttpHeaderEnum.CLIENT_IP.getCode());
     }
 

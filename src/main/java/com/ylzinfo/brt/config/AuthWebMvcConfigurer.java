@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.brt.intercepter.AnonymousInterceptor;
 import com.ylzinfo.brt.intercepter.ServiceAuthFilter;
+import com.ylzinfo.brt.intercepter.TestUserAuthFilter;
 import com.ylzinfo.brt.intercepter.UserAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,8 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
 
     @Autowired
     UserAuthFilter userAuthFilter;
+    @Autowired
+    TestUserAuthFilter testUserAuthFilter;
     @Autowired
     AnonymousInterceptor anonymousInterceptor;
     @Autowired
@@ -86,7 +89,9 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
 
 
         registry.addInterceptor(serviceAuthFilter).addPathPatterns("/**");
-        if (!ylzConfig.isSkipUserCheck()) {
+        if (ylzConfig.isSkipUserCheck()) {
+            registry.addInterceptor(testUserAuthFilter).addPathPatterns("/**");
+        } else {
             //用户权限
             registry.addInterceptor(userAuthFilter).addPathPatterns("/**");
             //拦截未携带凭证的请求

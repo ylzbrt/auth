@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.feign.AuthPrivilegeFeignClient;
 import com.ylzinfo.brt.feign.dto.RegisterApiDTO;
-import com.ylzinfo.brt.service.ApiService;
+import com.ylzinfo.brt.service.ApiInfoService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -18,16 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-@Service
+//@Service
 @Slf4j
-public class ApiServiceImpl implements ApiService {
+public class ApiInfoServiceImpl implements ApiInfoService {
     @Autowired
     YlzConfig ylzConfig;
     private String defaultPackage = "com.ylzinfo.brt.controller";
