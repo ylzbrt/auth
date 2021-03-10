@@ -84,7 +84,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 or department_id in ("d1","d11")
          )
          */
-
+/*
         final CheckUserVO userData = new CheckUserVO();
 
         final ArrayList<CheckUserVO.BizDataPrivilegeBean> privileges = new ArrayList<>();
@@ -106,10 +106,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         userData.setPrivileges(privileges);
         return userData;
-
+*/
         /**生产环境*/
-//        HttpServletRequest request = getRequest();
-//        return (CheckUserVO) request.getAttribute(HttpHeaderEnum.USER_DATA.getCode());
+       HttpServletRequest request = getRequest();
+        return (CheckUserVO) request.getAttribute(HttpHeaderEnum.USER_DATA.getCode());
     }
 /*
     @Override
