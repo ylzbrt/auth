@@ -48,7 +48,7 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
         final String url = request.getRequestURI();
         //不在公共接口中
         if (!isPublicUrl(url)) {
-            log.error("当前url非公共url，url={}");
+            log.error("当前url非公共url，url={}",url);
             return ResponseUtil.writeDenied(response, AuthReturnEntity.AUTH_ERR, "权限验证失败");
         }
         return super.preHandle(request, response, handler);

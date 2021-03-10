@@ -43,10 +43,11 @@ public class ApiServiceSwaggerImpl implements ApiInfoService {
             return;
         }
         Swagger swagger = mapper.mapDocumentation(documentation);
-        final HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        final HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-        UriComponents uriComponents = HostNameProvider.componentsFrom(servletRequest, swagger.getBasePath());
-        swagger.basePath(Strings.isNullOrEmpty(uriComponents.getPath()) ? "/" : uriComponents.getPath());
+//        UriComponents uriComponents = HostNameProvider.componentsFrom(servletRequest, swagger.getBasePath());
+//        swagger.basePath(Strings.isNullOrEmpty(uriComponents.getPath()) ? "/" : uriComponents.getPath());
+        swagger.basePath("/");
 //        final String json = JSONUtil.toJsonStr(swagger);
 //        log.info("json={}", json);
         List<RegisterApiDTO.ApiItem> apis = new ArrayList<>();
@@ -63,33 +64,40 @@ public class ApiServiceSwaggerImpl implements ApiInfoService {
 
     }
 
+    /***
+     * 处理每个api
+     */
+
     private void each(Swagger swagger, List<RegisterApiDTO.ApiItem> apis, String httpMethod, String url, Operation operation) {
         if (operation == null) {
             return;
         }
         final RegisterApiDTO.ApiItem apiItem = new RegisterApiDTO.ApiItem();
         apiItem.setServiceName(serviceName);
-
         apiItem.setHttpMethod(httpMethod);
-        apiItem.setUrl(url);
+        apiItem.setUrl(pathVarToStar(url));
         apiItem.setApiCategory(operation.getTags().get(0));
         apiItem.setApiName(operation.getSummary() != null ? operation.getSummary() : url);
-        final Set<RegisterApiDTO.ApiField> apiFields = new HashSet<>();
-        apiItem.setApiFields(apiFields);
+        handlerApiFields(swagger, operation, apiItem);
+        apis.add(apiItem);
+    }
 
+    /**
+     * 处理api的字段
+     * 针对没有返回值的情况  则不处理
+     */
+    private void handlerApiFields(Swagger swagger, Operation operation, RegisterApiDTO.ApiItem apiItem) {
         final Model responseSchema = operation.getResponses().get("200").getResponseSchema();
-        if (responseSchema == null) {
+        if (responseSchema == null || !(responseSchema instanceof RefModel)) {
             return;
         }
+
         final String simpleRef = ((RefModel) responseSchema).getSimpleRef();
         if (simpleRef == null) {
             return;
         }
 
         apiItem.setApiFields(getApiFields(swagger, simpleRef));
-
-        apis.add(apiItem);
-
 
     }
 
@@ -102,6 +110,11 @@ public class ApiServiceSwaggerImpl implements ApiInfoService {
             return getSimplteObject(s);
         }
         return s;
+    }
+
+    private String pathVarToStar(String url) {
+        ///{ruleCode}  =>  /*
+        return ReUtil.replaceAll(url, "\\{.*?\\}", "*");
     }
 
     private Set<RegisterApiDTO.ApiField> getApiFields(Swagger swagger, String simpleRef) {
@@ -119,7 +132,7 @@ public class ApiServiceSwaggerImpl implements ApiInfoService {
 
         //RepoProjectMap对象
         final Model model = swagger.getDefinitions().get(defName);
-        if (model == null) {
+        if (model == null || model.getProperties() == null) {
             return fields;
         }
         model.getProperties().forEach((k, v) -> {

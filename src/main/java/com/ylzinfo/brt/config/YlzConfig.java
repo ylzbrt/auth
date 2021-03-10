@@ -20,6 +20,16 @@ public class YlzConfig {
      * 无需要进行权限验证的公共接口
      */
     private List<String> publicUrls;
+
+
+    /**
+     * #已登录用户公共接口权限（已登录用户默认权限，可绕过用户的接口权限，如查询子系统、菜单查询、按地址查询子系统）
+     *   loginUserPublicUrls:
+     *     - /privilege/sub-system/selectSubSystem
+     *     - /privilege/sub-system/getByUrl
+     *     - /privilege/menu/query
+     */
+    private List<String> loginUserPublicUrls;
     /**
      * 跳过服务间调用调用权限
      */
