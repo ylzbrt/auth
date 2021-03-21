@@ -19,18 +19,17 @@ public class ServiceAuthServiceImpl implements ServiceAuthService {
 
 
     @Override
-    public String getSign() {
-        return calSign(this.serviceName);
+    public String getSign(String timestamp) {
+        return calSign(this.serviceName,timestamp);
     }
 
-    public String calSign(String clientServiceName) {
-        String nowMinute = DateUtil.format(new Date(), "yyyyMMddHHmm");
-        String tpl = String.format("%s_%s_%s", clientServiceName, ylzConfig.getSignSecret(), nowMinute);
+    public String calSign(String clientServiceName, String timestamp ) {
+        String tpl = String.format("%s_%s_%s", clientServiceName, ylzConfig.getSignSecret(), timestamp);
         return SecureUtil.md5(tpl);
     }
 
     @Override
-    public boolean check(String serviceName, String serviceSign) {
-        return calSign(serviceName).equals(serviceSign);
+    public boolean check(String serviceName, String serviceSign, String timestamp) {
+        return calSign(serviceName,timestamp).equals(serviceSign);
     }
 }

@@ -4,10 +4,10 @@ public interface ServiceAuthService {
     /**
      * feign请求调用时，计算出签名
      */
-    String getSign();
+    String getSign(String timestamp);
 
     /**
      * 签名验证
      */
-    boolean check(String serviceName, String serviceSign);
+    boolean check(String serviceName, String serviceSign, String timestamp );
 }

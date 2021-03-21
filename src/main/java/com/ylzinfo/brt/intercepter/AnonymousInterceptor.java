@@ -39,7 +39,8 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        log.info("拦截器={},ylzconfig={}", getClass(), ylzConfig);
+        log.info("拦截器={},url={}",getClass(),request.getRequestURI());
+
         final Boolean isPass = (Boolean) request.getAttribute(IntercepterEnum.IS_PASS.getCode());
         if (ylzConfig.isSkipUserCheck() || (isPass != null && isPass)) {
             return super.preHandle(request, response, handler);

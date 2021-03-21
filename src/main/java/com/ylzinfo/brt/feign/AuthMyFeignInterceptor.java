@@ -21,8 +21,11 @@ public class AuthMyFeignInterceptor implements RequestInterceptor {
     ServiceAuthService authService;
 
     public void apply(RequestTemplate template) {
+        final String timestamp = System.currentTimeMillis() + "";
+        final String sign = authService.getSign(timestamp);
+
         template.header(HttpHeaderEnum.SERVICE_NAME.getCode(), serviceName);
-        final String sign = authService.getSign();
+        template.header(HttpHeaderEnum.TIMESTAMP.getCode(), timestamp);
         template.header(HttpHeaderEnum.SERVICE_SIGN.getCode(), sign);
         log.debug("feign注入,SERVICE_NAME={},SERVICE_SIGN={}", serviceName, sign);
     }

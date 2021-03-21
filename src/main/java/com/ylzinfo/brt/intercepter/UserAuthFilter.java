@@ -34,7 +34,7 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
     YlzConfig ylzConfig;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("拦截器={}",getClass());
+        log.info("拦截器={},url={}",getClass(),request.getRequestURI());
         String userId = request.getHeader(HttpHeaderEnum.USER_ID.getCode());
         String userToken = request.getHeader(HttpHeaderEnum.USER_TOKEN.getCode());
         String userData = request.getHeader(HttpHeaderEnum.USER_DATA.getCode());
@@ -44,8 +44,10 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
             //丢给下一个过滤器
             return true;
         }
-        boolean isOk =ylzConfig.isSkipUserCheck() ||  userAuthService.check(userId, userToken, userData, timestamp,userSign);
+        final boolean isSignOk = userAuthService.check(userId, userToken, userData, timestamp, userSign);
+        boolean isOk =ylzConfig.isSkipUserCheck() || isSignOk;
         if (!isOk) {
+            log.info("isSkipUserCheck={},isSignOk={}",ylzConfig.isSkipUserCheck(),isSignOk);
             ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "非法用户请求");
             return false;
         }

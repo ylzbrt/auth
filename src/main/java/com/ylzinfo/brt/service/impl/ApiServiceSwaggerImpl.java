@@ -2,8 +2,10 @@ package com.ylzinfo.brt.service.impl;
 
 import cn.hutool.core.util.ReUtil;
 import com.google.common.base.Strings;
+import com.ylzinfo.brt.entity.AuthReturnEntity;
 import com.ylzinfo.brt.feign.AuthPrivilegeFeignClient;
 import com.ylzinfo.brt.feign.dto.RegisterApiDTO;
+import com.ylzinfo.brt.feign.vo.RegisterApiVO;
 import com.ylzinfo.brt.service.ApiInfoService;
 import io.swagger.models.*;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +62,8 @@ public class ApiServiceSwaggerImpl implements ApiInfoService {
         });
         final RegisterApiDTO dto = new RegisterApiDTO();
         dto.setApis(apis);
-        privilegeFeignClient.registerApi(dto);
+        final AuthReturnEntity<RegisterApiVO> res = privilegeFeignClient.registerApi(dto);
+        log.info("接口扫描结果={}",res);
 
     }
 

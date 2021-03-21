@@ -6,8 +6,10 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ylzinfo.brt.config.YlzConfig;
+import com.ylzinfo.brt.entity.AuthReturnEntity;
 import com.ylzinfo.brt.feign.AuthPrivilegeFeignClient;
 import com.ylzinfo.brt.feign.dto.RegisterApiDTO;
+import com.ylzinfo.brt.feign.vo.RegisterApiVO;
 import com.ylzinfo.brt.service.ApiInfoService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -77,7 +79,8 @@ public class ApiInfoServiceImpl implements ApiInfoService {
         }
         final RegisterApiDTO dto = new RegisterApiDTO();
         dto.setApis(apis);
-        privilegeFeignClient.registerApi(dto);
+        final AuthReturnEntity<RegisterApiVO> res = privilegeFeignClient.registerApi(dto);
+        log.info("接口扫描结果={}",res);
     }
 
 

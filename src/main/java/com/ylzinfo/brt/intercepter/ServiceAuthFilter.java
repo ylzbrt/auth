@@ -30,16 +30,20 @@ public class ServiceAuthFilter extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("拦截器={}",getClass());
+        log.info("拦截器={},url={}",getClass(),request.getRequestURI());
+
 
         String serviceName = request.getHeader(HttpHeaderEnum.SERVICE_NAME.getCode());
         String serviceSign = request.getHeader(HttpHeaderEnum.SERVICE_SIGN.getCode());
+        String timestamp = request.getHeader(HttpHeaderEnum.TIMESTAMP.getCode());
+
         if(StringUtils.isEmpty(serviceName) && StringUtils.isEmpty(serviceSign)){
             //丢给下一个过滤器
             return true;
         }
-        boolean isOk=ylzConfig.isSkipServiceCheck() || authService.check(serviceName,serviceSign);
+        boolean isOk=ylzConfig.isSkipServiceCheck() || authService.check(serviceName,serviceSign,timestamp);
         if(!isOk){
+            log.info("服务间调用验证失败，isSkipServiceCheck={},serviceName={},sign={}",ylzConfig.isSkipServiceCheck(),serviceName,serviceSign);
             ResponseUtil.writeDenied(response, AuthReturnEntity.SERVICE_AUTH_ERR,"服务间调用异常");
             return false;
         }
