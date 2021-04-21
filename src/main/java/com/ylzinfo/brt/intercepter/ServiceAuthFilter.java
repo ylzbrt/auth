@@ -44,7 +44,7 @@ public class ServiceAuthFilter extends HandlerInterceptorAdapter {
         boolean isOk=ylzConfig.isSkipServiceCheck() || authService.check(serviceName,serviceSign,timestamp);
         if(!isOk){
             log.info("服务间调用验证失败，isSkipServiceCheck={},serviceName={},sign={}",ylzConfig.isSkipServiceCheck(),serviceName,serviceSign);
-            ResponseUtil.writeDenied(response, AuthReturnEntity.SERVICE_AUTH_ERR,"服务间调用异常");
+            ResponseUtil.writeDenied(response, AuthReturnEntity.SERVICE_AUTH_ERR,"服务间调用异常【auth.ServiceAuthFilter】");
             return false;
         }
         request.setAttribute(IntercepterEnum.IS_PASS.getCode(),true);

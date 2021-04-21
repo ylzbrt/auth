@@ -48,7 +48,7 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
         boolean isOk =ylzConfig.isSkipUserCheck() || isSignOk;
         if (!isOk) {
             log.info("isSkipUserCheck={},isSignOk={}",ylzConfig.isSkipUserCheck(),isSignOk);
-            ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "非法用户请求");
+            ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "非法用户请求【auth.UserAuthFilter】");
             return false;
         }
         //反序列化用户信息，放在上下文
@@ -57,7 +57,7 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
             userDataBo = JSONUtil.toBean(URLUtil.decode(userData), CheckUserVO.class);
         } catch (Exception e) {
             log.error("反序列化用户信息失败,userData={}", userData);
-            ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "非法用户请求,用户数据异常");
+            ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "非法用户请求,用户数据异常【auth.UserAuthFilter】");
             return false;
         }
         userService.saveUserData(userDataBo);
