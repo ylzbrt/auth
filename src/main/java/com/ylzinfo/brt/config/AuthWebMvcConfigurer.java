@@ -7,6 +7,7 @@ import com.ylzinfo.brt.intercepter.AnonymousInterceptor;
 import com.ylzinfo.brt.intercepter.ServiceAuthFilter;
 import com.ylzinfo.brt.intercepter.TestUserAuthFilter;
 import com.ylzinfo.brt.intercepter.UserAuthFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ import java.util.TimeZone;
 
 @Configuration
 @EnableWebMvc
+@Slf4j
 public class AuthWebMvcConfigurer implements WebMvcConfigurer {
 
 
@@ -61,16 +63,21 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper objectMapper = converter.getObjectMapper();
+        /**
+        此处不能新增一个MappingJackson2HttpMessageConverter并添加在converters的最前面，否则引起xxl-job-executor注册失败
+         http://127.0.0.1:8093/job-admin/api/registry
+         header: 'Content-Type: application/json'
+         {"registryGroup":"EXECUTOR","registryKey":"job-executor","registryValue":"http://127.0.0.1:8095/"}
+         */
+        for (HttpMessageConverter<?> converter : converters) {
+            if(converter instanceof MappingJackson2HttpMessageConverter){
+                ObjectMapper objectMapper = ((MappingJackson2HttpMessageConverter) converter).getObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            }
+        }
 
-        // 时间格式化
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        // 设置格式化内容
-        converter.setObjectMapper(objectMapper);
-        converters.add(0, converter);
     }
 
 
