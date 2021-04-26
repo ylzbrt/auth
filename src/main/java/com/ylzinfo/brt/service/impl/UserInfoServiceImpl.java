@@ -1,6 +1,8 @@
 package com.ylzinfo.brt.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.service.UserInfoService;
 import com.ylzinfo.brt.vo.CheckUserVO;
@@ -141,22 +143,40 @@ public class UserInfoServiceImpl implements UserInfoService {
         for (CheckUserVO.BizDataPrivilegeBean privilege : userData.getPrivileges()) {
             /**认最低级别*/
             //有配置科室
-            if (CollectionUtil.isNotEmpty(privilege.getDepartmentIds())) {
+            if (!isEmpty(privilege.getDepartmentIds())) {
                 add(outJoiner,departmentField,privilege.getDepartmentIds());
                 continue;
             }
             //有配置医疗机构
-            if (CollectionUtil.isNotEmpty(privilege.getMedicalInstitutionIds())) {
+            if (!isEmpty(privilege.getMedicalInstitutionIds())) {
                 add(outJoiner,medicalInstitutionField,privilege.getMedicalInstitutionIds());
                 continue;
             }
             //有配置统筹区
-            if (CollectionUtil.isNotEmpty(privilege.getPoolareaNos())) {
+            if (!isEmpty(privilege.getPoolareaNos())) {
                 add(outJoiner,poolareaNoField,privilege.getPoolareaNos());
                 continue;
             }
         }
         return outJoiner.toString();
+    }
+
+    /**
+     *  是
+     * @param arr 统筹区、医疗机构、或科室id
+     * @return
+     */
+    private boolean isEmpty(List<String> arr){
+        boolean isEmpty = CollectionUtil.isEmpty(arr);
+        if(isEmpty){
+            return true;
+        }
+        for (String s : arr) {
+            if(StrUtil.isBlank(s)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void add(StringJoiner outJoiner, String field, List<String> ids) {
