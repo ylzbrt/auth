@@ -93,6 +93,10 @@ public class PrivilegeInterceptor implements Interceptor {
             return origSql;
         }
         String where = userInfoService.getBizPrivilegeSql("poolarea_no", "medical_institution_id", "department_id");
+        if(where.equals("1=1")){
+            log.info("超级管理员拥有所有权限，未做sql拦截");
+            return origSql;
+        }
         String newSql= String.format("select * from (%s) t where %s", origSql, where);
         log.info("改写后的sql={}",newSql);
         return newSql;

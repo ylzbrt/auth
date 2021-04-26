@@ -137,6 +137,9 @@ public class UserInfoServiceImpl implements UserInfoService {
     public String getBizPrivilegeSql(String poolareaNoField, String medicalInstitutionField, String departmentField) {
         CheckUserVO userData= getUserData();
         if (CollectionUtil.isEmpty(userData.getPrivileges())) {
+            if(userData.getUser().getUserId()==1){
+                return "1=1";
+            }
             return "1=2";
         }
         StringJoiner outJoiner = new StringJoiner(" or ", "(", ")").setEmptyValue("1=2");
