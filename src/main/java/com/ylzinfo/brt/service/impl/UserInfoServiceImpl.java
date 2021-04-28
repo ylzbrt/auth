@@ -186,7 +186,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (CollectionUtil.isEmpty(ids)) {
             return;
         }
-        StringJoiner sj = new StringJoiner("\",\"", "(\"", "\")");
+        StringJoiner sj = new StringJoiner("','", "('", "')");
         for (String id : ids) {
             sj.add(id);
         }

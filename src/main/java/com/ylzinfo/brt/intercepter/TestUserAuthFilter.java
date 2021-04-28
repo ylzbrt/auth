@@ -32,7 +32,7 @@ public class TestUserAuthFilter extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         CheckUserVO userDataBo = ylzConfig.getTestUserData();
         if(userDataBo==null){
-            ResponseUtil.writeDenied(response, AuthReturnEntity.ILLEGAL_USER_ERR, "测试用户配置错误，请检查配置ylz.testUserData");
+            ResponseUtil.writeDenied(response, AuthReturnEntity.SYS_ERR, "测试用户配置错误，请检查配置ylz.testUserData");
             return false;
         }
         userService.saveUserData(userDataBo);

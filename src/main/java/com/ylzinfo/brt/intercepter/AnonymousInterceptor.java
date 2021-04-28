@@ -50,7 +50,7 @@ public class AnonymousInterceptor extends HandlerInterceptorAdapter {
         //不在公共接口中
         if (!isPublicUrl(url)) {
             log.error("当前url非公共url，url={}",url);
-            return ResponseUtil.writeDenied(response, AuthReturnEntity.AUTH_ERR, "权限验证失败,请求头必需包含用户信息或服务信息【auth.AnonymousInterceptor】");
+            return ResponseUtil.writeDenied(response, AuthReturnEntity.LOGIN_ERR, "权限验证失败,请求头必需包含用户信息或服务信息【auth.AnonymousInterceptor】");
         }
         return super.preHandle(request, response, handler);
     }

@@ -16,9 +16,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthReturnEntity<T>   {
     public static String SUCCESS ="0"; //成功
-    public static String AUTH_ERR="-4";//权限校验异常
+    public static String SYS_ERR="-1"; //系统异常
+    public static String LOGIN_ERR="-7";//重新登陆
     public static String SERVICE_AUTH_ERR="-8";//非服务间正常调用
-    public static String ILLEGAL_USER_ERR="-9";//非法用户信息
 
     @ApiModelProperty("响应代码")
     private String code ="0";
