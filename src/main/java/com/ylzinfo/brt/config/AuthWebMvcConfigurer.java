@@ -3,10 +3,7 @@ package com.ylzinfo.brt.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ylzinfo.brt.intercepter.AnonymousInterceptor;
-import com.ylzinfo.brt.intercepter.ServiceAuthFilter;
-import com.ylzinfo.brt.intercepter.TestUserAuthFilter;
-import com.ylzinfo.brt.intercepter.UserAuthFilter;
+import com.ylzinfo.brt.intercepter.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +37,9 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
     TestUserAuthFilter testUserAuthFilter;
     @Autowired
     AnonymousInterceptor anonymousInterceptor;
+
+    @Autowired
+    TraceInterceptor traceInterceptor;
     @Autowired
     YlzConfig ylzConfig;
 
@@ -105,6 +105,7 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
             registry.addInterceptor(anonymousInterceptor).addPathPatterns("/**");
         }
 
+        registry.addInterceptor(traceInterceptor).addPathPatterns("/**");
 
     }
 }

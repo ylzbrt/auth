@@ -12,7 +12,8 @@ public enum HttpHeaderEnum {
     CLIENT_IP("X-CLIENT-IP", "客户端IP"),
     SERVICE_NAME("X-SERVICE-NAME", "服务名称"),
     SERVICE_SIGN("X-SERVICE-SIGN", "服务签名"),
-    TIMESTAMP("X-TIMESTAMP", "时间");
+    TIMESTAMP("X-TIMESTAMP", "时间"),
+    SERVER_INFO("X-SERVER-INFO", "后端服务器信息");
 
 
     private String code;
