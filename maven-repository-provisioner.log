@@ -1,0 +1,63 @@
+13:51:50.393 [main] INFO  MavenRepositoryProvisioner - -----------------------------------
+13:51:50.397 [main] INFO  MavenRepositoryProvisioner -  Maven Repository Provisioner      
+13:51:50.397 [main] INFO  MavenRepositoryProvisioner -  simpligility technologies inc.    
+13:51:50.397 [main] INFO  MavenRepositoryProvisioner -  http://www.simpligility.com       
+13:51:50.397 [main] INFO  MavenRepositoryProvisioner - -----------------------------------
+13:51:50.441 [main] INFO  MavenRepositoryProvisioner - 
+Provisioning artifacts: null
+Source: https://repo1.maven.org/maven2
+Target: https://packages.aliyun.com/maven/repository/2102590-snapshot-164gVD/
+Username: 609b6bbc9db2b2a61b93fe43
+Password: ************************************
+IncludeSources: true
+IncludeJavadoc: true
+IncludeProvidedScope: false
+IncludeTestScope: false
+IncludeRuntimeScope: false
+Check target: true
+Verify only: false
+Local cache or source repository directory: repo
+
+
+13:51:50.444 [main] INFO  MavenRepositoryProvisioner -  Absolute path: /mnt/d/work/kfxt2.0/codes/auth/repo
+13:51:50.444 [main] INFO  MavenRepositoryProvisioner - Detected local cache directory 'repo'.
+13:51:50.445 [main] INFO  MavenRepositoryProvisioner - No artifact coordinates specified - using cache directory as source.
+13:51:50.445 [main] INFO  MavenRepositoryProvisioner - Artifact retrieval skipped. 
+13:51:50.445 [main] INFO  MavenRepositoryProvisioner - Artifact deployment starting.
+13:51:52.215 [main] INFO  MavenRepositoryProvisioner - Artifact deployment completed.
+13:51:52.216 [main] INFO  MavenRepositoryProvisioner - Processing Completed.
+13:51:52.216 [main] INFO  MavenRepositoryProvisioner - 
+Processing Summary
+-----------------------------------
+Configuration:
+
+Provisioning artifacts: null
+Source: https://repo1.maven.org/maven2
+Target: https://packages.aliyun.com/maven/repository/2102590-snapshot-164gVD/
+Username: 609b6bbc9db2b2a61b93fe43
+Password: ************************************
+IncludeSources: true
+IncludeJavadoc: true
+IncludeProvidedScope: false
+IncludeTestScope: false
+IncludeRuntimeScope: false
+Check target: true
+Verify only: false
+Local cache or source repository directory: repo
+
+Sucessful Deployments:
+
+
+Failed Deployments:
+
+
+Skipped Deployments (POM already in target):
+
+
+Potential Deployments :
+
+
+
+13:51:52.222 [main] INFO  MavenRepositoryProvisioner - Exiting: SUCCESS 
+Deployment completed successfully.
+
