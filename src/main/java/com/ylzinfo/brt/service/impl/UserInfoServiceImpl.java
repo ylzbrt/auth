@@ -79,59 +79,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public CheckUserVO getUserData() {
 
-        /**测试用
-          (
-             medical_institution_id in ("yy22","yy222")
-                or poolarea_no in ("350300")
-                or department_id in ("d1","d11")
-         )
-         */
-/*
-        final CheckUserVO userData = new CheckUserVO();
 
-        final ArrayList<CheckUserVO.BizDataPrivilegeBean> privileges = new ArrayList<>();
-        //科室
-        final CheckUserVO.BizDataPrivilegeBean privilegesBean = new CheckUserVO.BizDataPrivilegeBean();
-        privilegesBean.setPoolareaNos(Arrays.asList("350100"));
-        privilegesBean.setMedicalInstitutionIds(Arrays.asList("yy11","yy111"));
-        privilegesBean.setDepartmentIds(Arrays.asList("d1","d11"));
-        //医院
-        final CheckUserVO.BizDataPrivilegeBean privilegesBean1 = new CheckUserVO.BizDataPrivilegeBean();
-        privilegesBean1.setPoolareaNos(Arrays.asList("350200"));
-        privilegesBean1.setMedicalInstitutionIds(Arrays.asList("yy22","yy222"));
-        privileges.add(privilegesBean1);
-        //统筹区
-        final CheckUserVO.BizDataPrivilegeBean privilegesBean2 = new CheckUserVO.BizDataPrivilegeBean();
-        privilegesBean2.setPoolareaNos(Arrays.asList("350300"));
-        privileges.add(privilegesBean2);
-        privileges.add(privilegesBean);
-
-        userData.setPrivileges(privileges);
-        return userData;
-*/
-        /**生产环境*/
        HttpServletRequest request = getRequest();
         return (CheckUserVO) request.getAttribute(HttpHeaderEnum.USER_DATA.getCode());
     }
-/*
-    @Override
-    public List<String> getGrantedPoolareaNos() {
-        return Optional.ofNullable(getUserData().getPrivileges())
-                .orElse(new ArrayList<>())
-                .stream()
-                .filter(o -> o.getPoolareaNos() != null)
-                .flatMap(bizDataPrivilegeBean -> bizDataPrivilegeBean.getPoolareaNos().stream())
-                .collect(Collectors.toList());
-    }
 
-   @Override
-    public String getGrantedPoolareaNosSql(String field) {
-        final List<String> grantedPoolareaNos = getGrantedPoolareaNos();
-        if (CollectionUtil.isEmpty(grantedPoolareaNos)) {
-            return "1=2";
-        }
-        return String.format("%s in (\"%s\")", field, CollectionUtil.join(grantedPoolareaNos, "\",\""));
-    }*/
 
     @Override
     public String getBizPrivilegeSql(String poolareaNoField, String medicalInstitutionField, String departmentField) {
@@ -146,17 +98,17 @@ public class UserInfoServiceImpl implements UserInfoService {
         for (CheckUserVO.BizDataPrivilegeBean privilege : userData.getPrivileges()) {
             /**认最低级别*/
             //有配置科室
-            if (!isEmpty(privilege.getDepartmentIds())) {
+            if (StrUtil.isNotBlank(departmentField) && !isEmpty(privilege.getDepartmentIds())) {
                 add(outJoiner,departmentField,privilege.getDepartmentIds());
                 continue;
             }
             //有配置医疗机构
-            if (!isEmpty(privilege.getMedicalInstitutionIds())) {
+            if (StrUtil.isNotBlank(medicalInstitutionField) && !isEmpty(privilege.getMedicalInstitutionIds())) {
                 add(outJoiner,medicalInstitutionField,privilege.getMedicalInstitutionIds());
                 continue;
             }
             //有配置统筹区
-            if (!isEmpty(privilege.getPoolareaNos())) {
+            if (StrUtil.isNotBlank(poolareaNoField) && !isEmpty(privilege.getPoolareaNos())) {
                 add(outJoiner,poolareaNoField,privilege.getPoolareaNos());
                 continue;
             }
