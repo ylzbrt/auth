@@ -1,20 +1,11 @@
 package com.ylzinfo.brt.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
-import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.service.UserInfoService;
 import com.ylzinfo.brt.vo.CheckUserVO;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
 
 /***
  * 测试时使用
@@ -80,6 +71,8 @@ public class UserInfoServiceDevImpl extends UserInfoServiceImpl implements UserI
         privilegesBean.setPoolareaNos(Arrays.asList("350100"));
         privilegesBean.setMedicalInstitutionIds(Arrays.asList("yy11","yy111"));
         privilegesBean.setDepartmentIds(Arrays.asList("d1","d11"));
+        privileges.add(privilegesBean);
+
         //医院
         final CheckUserVO.BizDataPrivilegeBean privilegesBean1 = new CheckUserVO.BizDataPrivilegeBean();
         privilegesBean1.setPoolareaNos(Arrays.asList("350200"));
@@ -89,14 +82,18 @@ public class UserInfoServiceDevImpl extends UserInfoServiceImpl implements UserI
         final CheckUserVO.BizDataPrivilegeBean privilegesBean2 = new CheckUserVO.BizDataPrivilegeBean();
         privilegesBean2.setPoolareaNos(Arrays.asList("350300"));
         privileges.add(privilegesBean2);
-        privileges.add(privilegesBean);
+
+        //区县
+        final CheckUserVO.BizDataPrivilegeBean privilegesBean3 = new CheckUserVO.BizDataPrivilegeBean();
+        privilegesBean3.setPoolareaNos(Arrays.asList("350102"));
+        privileges.add(privilegesBean3);
 
         userData.setPrivileges(privileges);
         return userData;
 
     }
     @Override
-    public String getBizPrivilegeSql(String poolareaNoField, String medicalInstitutionField, String departmentField) {
-       return super.getBizPrivilegeSql(poolareaNoField,medicalInstitutionField,departmentField);
+    public String getBizPrivilegeSql(String poolareaNoField, String districtField, String departmentField, String medicalInstitutionField) {
+       return super.getBizPrivilegeSql(poolareaNoField, districtField, departmentField, medicalInstitutionField);
     }
 }

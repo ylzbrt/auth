@@ -1,7 +1,6 @@
 package com.ylzinfo.brt.mybatis;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ylzinfo.brt.config.SqlInterceptorConfig;
@@ -54,6 +53,7 @@ import java.util.Properties;
 })
 @Component
 public class PrivilegeInterceptor implements Interceptor {
+    public static final String FUN_NAME = "privilege";
     private Properties properties;
     @Autowired
     SqlInterceptorConfig sqlInterceptorConfig;
@@ -114,7 +114,7 @@ public class PrivilegeInterceptor implements Interceptor {
         //开始进行替换
         String newSql = origSql;
         for (ConditionField conditionField : conditionFields) {
-            String where = userInfoService.getBizPrivilegeSql(conditionField.getPoolareaNoField(), conditionField.getMedicalInstitutionField(), conditionField.getDepartmentField());
+            String where = userInfoService.getBizPrivilegeSql(conditionField.getPoolareaNoField(), conditionField.getDistrictField(), conditionField.getDepartmentField(), conditionField.getMedicalInstitutionField());
             String beforeReplace = newSql;
             newSql = newSql.replace(conditionField.getPlaceholder(), where);
             log.debug("conditionField={},where={},beforeReplace={},afterReplace={}", conditionField, where, beforeReplace, newSql);
@@ -130,13 +130,14 @@ public class PrivilegeInterceptor implements Interceptor {
     public static class ConditionField {
         private String placeholder;
         private String poolareaNoField;
+        private String districtField;
         private String medicalInstitutionField;
         private String departmentField;
     }
 
     public List<ConditionField> parse(String origSql) throws Exception {
 
-        final String regex = "privilege\\('(.*?)'\\s*?,\\s*?'(.*?)'\\s*?,\\s*?'(.*?)'\\)";
+        final String regex = "privilege\\('(.*?)'\\s*?,\\s*?'(.*?)'\\s*?,\\s*?'(.*?)'\\s*?,\\s*?'(.*?)'\\)";
         final List<String> field0 = ReUtil.findAll(regex, origSql, 0);
         if (CollectionUtil.isEmpty(field0)) {
             log.debug("未发现占用符");
@@ -144,24 +145,29 @@ public class PrivilegeInterceptor implements Interceptor {
         final List<String> field1 = ReUtil.findAll(regex, origSql, 1);
         final List<String> field2 = ReUtil.findAll(regex, origSql, 2);
         final List<String> field3 = ReUtil.findAll(regex, origSql, 3);
+        final List<String> field4 = ReUtil.findAll(regex, origSql, 4);
         log.debug("field0={}", field0);
         log.debug("field1={}", field1);
         log.debug("field2={}", field2);
         log.debug("field3={}", field3);
+        log.debug("field4={}", field4);
 
         List<ConditionField> conditionFields = new ArrayList<>();
         for (int i = 0; i < field1.size(); i++) {
-            final ConditionField conditionField = new ConditionField(field0.get(i), field1.get(i), field2.get(i), field3.get(i));
-            //以下为错误配置
-            //and privilege('a.poolarea_no','a.akb020') and privilege('a.aaa027','a.akb020','a.ksid')
-            //field0= privilege('a.poolarea_no','a.akb020') and privilege('a.aaa027','a.akb020','a.ksid')
-            //field1= a.poolarea_no
-            //field2= a.akb020') and privilege('a.aaa027
-            //field3= a.akb020','a.ksid
+            final ConditionField conditionField = new ConditionField(field0.get(i), field1.get(i), field2.get(i),field3.get(i),field4.get(i));
+            /*
+             以下为错误配置
+             and privilege('a.poolarea_no','a.akb020') and privilege('a.aaa027','a.akb020','a.ksid')
+             field0= privilege('a.poolarea_no','a.akb020') and privilege('a.aaa027','a.akb020','a.ksid')
+             field1= a.poolarea_no
+             field2= a.akb020') and privilege('a.aaa027
+             field3= a.akb020','a.ksid
+            */
             if(
-                conditionField.getPoolareaNoField().contains("privilege")||
-                conditionField.getMedicalInstitutionField().contains("privilege")||
-                conditionField.getDepartmentField().contains("privilege")
+                conditionField.getPoolareaNoField().contains(FUN_NAME)||
+                conditionField.getDistrictField().contains(FUN_NAME)||
+                conditionField.getMedicalInstitutionField().contains(FUN_NAME)||
+                conditionField.getDepartmentField().contains(FUN_NAME)
             ){
                 throw new Exception("sql语句占位符格式错误，错误片段=" + conditionField.getPlaceholder());
             }

@@ -7,13 +7,19 @@ mvn install:install-file -DgroupId=com.github.ylzbrt -DartifactId=auth -Dversion
     
     select * from organization a
     <where>
-      privilege('a.admdvs','','')
+      privilege('a.aaa027','a.aab301','','')
     </where>
+    
     
     拦截后语句
     
     select *
      FROM organization a
-     WHERE (a.admdvs in ('350100','350200'));
+     WHERE (a.aaa027 in ('350100','350200'));
+
+
+    select *
+     FROM organization a
+     WHERE (a.aab301 in ('350101','350203'));
 
 

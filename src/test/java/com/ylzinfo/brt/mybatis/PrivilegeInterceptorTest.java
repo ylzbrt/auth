@@ -15,14 +15,16 @@ public class PrivilegeInterceptorTest {
 
     PrivilegeInterceptor privilegeInterceptor = new PrivilegeInterceptor();
 
-    private String sql1 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','')";
-    private String sql2 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.akb020','')";
-    private String sql3 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.akb020','a.ks')";
+    private String sql1 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','','')";
+    private String sql2 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','a.akb020','')";
+    private String sql3 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','a.akb020','a.ks')";
     //错误示例
-    private String sql4 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.akb020')";
-    private String sql5 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.akb020','a.ksid') and privilege('a.aaa027','a.akb020','a.ksid')";
+    private String sql4 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','a.akb020')";
+    private String sql5 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','a.akb020','a.ksid') and privilege('a.aaa027','','a.akb020','a.ksid')";
     //错误示例
-    private String sql6 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.akb020') and privilege('a.aaa027','a.akb020','a.ksid')";
+    private String sql6 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','','a.akb020') and privilege('a.aaa027','','a.akb020','a.ksid')";
+    //统筹区+区县
+    private String sql7 = "select * from xxx a ,yyy b where a.field1=b.field1 and privilege('a.poolarea_no','a.aab301','a.akb020','') and privilege('a.aaa027','a.aab301','a.akb020','a.ksid')";
 
     @Before
     public void init() {
@@ -63,6 +65,13 @@ public class PrivilegeInterceptorTest {
         final String xxx = privilegeInterceptor.makeNewSql("xxx", sql6);
         log.info("sql={}", xxx);
     }
+
+    @Test
+    public void testMakeNewSql7() throws Throwable {
+        final String xxx = privilegeInterceptor.makeNewSql("xxx", sql7);
+        log.info("sql={}", xxx);
+    }
+
     @Test
     public void parse1() throws Exception {
         List<PrivilegeInterceptor.ConditionField> arr = privilegeInterceptor.parse(sql1);

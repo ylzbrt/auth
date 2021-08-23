@@ -32,7 +32,7 @@ public class UserInfoServiceTest {
     @Test
     public void getBizPrivilegeSql() {
         UserInfoService userInfoService = new UserInfoServiceImpl();
-        final String sql = userInfoService.getBizPrivilegeSql("poolarea_no", "medical_institution_id", "department_id");
+        final String sql = userInfoService.getBizPrivilegeSql("poolarea_no","aab301", "medical_institution_id", "department_id");
         log.info("sql={}", sql);
     }
 
