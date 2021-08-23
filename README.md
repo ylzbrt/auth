@@ -21,5 +21,8 @@ mvn install:install-file -DgroupId=com.github.ylzbrt -DartifactId=auth -Dversion
     select *
      FROM organization a
      WHERE (a.aab301 in ('350101','350203'));
+     
+# 发布到jitpack
 
+git push ylz master
 
