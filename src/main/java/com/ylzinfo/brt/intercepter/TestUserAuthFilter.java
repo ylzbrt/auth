@@ -30,13 +30,15 @@ public class TestUserAuthFilter extends HandlerInterceptorAdapter {
     YlzConfig ylzConfig;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        CheckUserVO userDataBo = ylzConfig.getTestUserData();
-        if(userDataBo==null){
-            ResponseUtil.writeDenied(response, AuthReturnEntity.SYS_ERR, "测试用户配置错误，请检查配置ylz.testUserData");
-            return false;
+        if(ylzConfig.isSkipUserCheck()){
+            CheckUserVO userDataBo = ylzConfig.getTestUserData();
+            if(userDataBo==null){
+                ResponseUtil.writeDenied(response, AuthReturnEntity.SYS_ERR, "测试用户配置错误，请检查配置ylz.testUserData");
+                return false;
+            }
+            userService.saveUserData(userDataBo);
+            request.setAttribute(IntercepterEnum.IS_PASS.getCode(),true);
         }
-        userService.saveUserData(userDataBo);
-        request.setAttribute(IntercepterEnum.IS_PASS.getCode(),true);
         return true;
     }
 

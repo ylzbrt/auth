@@ -124,4 +124,11 @@ public class PrivilegeInterceptorTest {
         Assert.assertEquals(arr.get(1).getDepartmentField(), "a.ksid");
 
     }
+    @Test
+    public void parse7() throws Exception {
+        List<PrivilegeInterceptor.ConditionField> arr = privilegeInterceptor.parse("privilege('a.aaa027','a.aab301','a.akb020','a.ksid')");
+        log.info("arr={}", arr);
+        Assert.assertEquals(arr.size(), 0);
+
+    }
 }

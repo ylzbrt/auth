@@ -36,7 +36,9 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
     @Autowired
     TestUserAuthFilter testUserAuthFilter;
     @Autowired
-    AnonymousInterceptor anonymousInterceptor;
+    LastInterceptor lastInterceptor;
+    @Autowired
+    FirstInterceptor firstInterceptor;
 
     @Autowired
     TraceInterceptor traceInterceptor;
@@ -88,23 +90,10 @@ public class AuthWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //加入顺序即为执行顺序，每个拦截器只在有传各自权限验证参数的情况，才做拦截
-        //permissionInterceptor只在有传uid,token生效
-        //apiInterceptor只在有传appid,appsecret生效
-        //最后未被拦截的请求落入anonymousInterceptor进行验证，这些请求未携带权限验证参数，统一抛出错误
-        //服务间调用
-
-
+        registry.addInterceptor(firstInterceptor).addPathPatterns("/**");
         registry.addInterceptor(serviceAuthFilter).addPathPatterns("/**");
-        if (ylzConfig.isSkipUserCheck()) {
-            registry.addInterceptor(testUserAuthFilter).addPathPatterns("/**");
-        } else {
-            //用户权限
-            registry.addInterceptor(userAuthFilter).addPathPatterns("/**");
-            //拦截未携带凭证的请求
-            registry.addInterceptor(anonymousInterceptor).addPathPatterns("/**");
-        }
-
+        registry.addInterceptor(testUserAuthFilter).addPathPatterns("/**");
+        registry.addInterceptor(userAuthFilter).addPathPatterns("/**");
         registry.addInterceptor(traceInterceptor).addPathPatterns("/**");
 
     }

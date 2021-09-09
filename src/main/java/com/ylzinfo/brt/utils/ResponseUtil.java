@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ResponseUtil {
-    public static boolean writeDenied(HttpServletResponse response, String flag, String message) throws IOException {
+    public static void writeDenied(HttpServletResponse response, String flag, String message) throws IOException {
         AuthReturnEntity returnEntity=new AuthReturnEntity();
         returnEntity.setCode(flag);
         returnEntity.setMessage(message);
@@ -16,6 +16,5 @@ public class ResponseUtil {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(result);
-        return false;
     }
 }
