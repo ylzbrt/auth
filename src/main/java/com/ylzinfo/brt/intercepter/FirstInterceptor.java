@@ -6,8 +6,7 @@ package com.ylzinfo.brt.intercepter;
 
 import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.constant.IntercepterEnum;
-import com.ylzinfo.brt.entity.AuthReturnEntity;
-import com.ylzinfo.brt.utils.ResponseUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.ylzinfo.brt.intercepter;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.ylzinfo.brt.config.YlzConfig;
+ import cn.hutool.core.util.StrUtil;
+ import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.constant.IntercepterEnum;
 import com.ylzinfo.brt.entity.AuthReturnEntity;
@@ -37,7 +37,7 @@ public class ServiceAuthFilter extends HandlerInterceptorAdapter {
         String serviceSign = request.getHeader(HttpHeaderEnum.SERVICE_SIGN.getCode());
         String timestamp = request.getHeader(HttpHeaderEnum.TIMESTAMP.getCode());
 
-        if(StringUtils.isEmpty(serviceName) && StringUtils.isEmpty(serviceSign)){
+        if(StrUtil.isBlank(serviceName) && StrUtil.isBlank(serviceSign)){
             //丢给下一个过滤器
             return true;
         }

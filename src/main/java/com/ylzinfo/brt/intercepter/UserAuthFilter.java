@@ -1,8 +1,8 @@
 package com.ylzinfo.brt.intercepter;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.constant.HttpHeaderEnum;
 import com.ylzinfo.brt.constant.IntercepterEnum;
@@ -40,7 +40,7 @@ public class UserAuthFilter extends HandlerInterceptorAdapter {
         String userData = request.getHeader(HttpHeaderEnum.USER_DATA.getCode());
         String userSign = request.getHeader(HttpHeaderEnum.USER_SIGN.getCode());
         String timestamp = request.getHeader(HttpHeaderEnum.TIMESTAMP.getCode());
-        if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(userToken) && StringUtils.isEmpty(userData)) {
+        if (StrUtil.isBlank(userId) && StrUtil.isBlank(userToken) && StrUtil.isBlank(userData)) {
             //丢给下一个过滤器
             return true;
         }

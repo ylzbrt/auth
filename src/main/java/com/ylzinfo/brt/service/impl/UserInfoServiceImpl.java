@@ -68,7 +68,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void saveUserData(CheckUserVO userDataBo) {
         HttpServletRequest request = getRequest();
         request.setAttribute(HttpHeaderEnum.USER_DATA.getCode(), userDataBo);
-    }
+        // 将request设置为子线程共享
+        ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        RequestContextHolder.setRequestAttributes(sra, true);
+}
 
     private HttpServletRequest getRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

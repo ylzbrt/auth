@@ -4,7 +4,7 @@
 package com.ylzinfo.brt.intercepter;
 
 
-import cn.hutool.core.collection.CollectionUtil;
+
 import com.ylzinfo.brt.config.YlzConfig;
 import com.ylzinfo.brt.constant.IntercepterEnum;
 import com.ylzinfo.brt.entity.AuthReturnEntity;
@@ -12,14 +12,11 @@ import com.ylzinfo.brt.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
+
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 @Component

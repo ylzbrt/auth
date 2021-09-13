@@ -26,3 +26,12 @@ mvn install:install-file -DgroupId=com.github.ylzbrt -DartifactId=auth -Dversion
 
 git push ylz master
 
+
+# jitpack 更新
+https://jitpack.io/#ylzbrt/auth
+
+选择branch, master-SNAPSHOT,点get it
+
+# 删除缓存
+rm -fr /root/.m2/repository/com/github/ylzbrt
+rm -fr /home/ylz/.m2/repository/com/github/ylzbrt
